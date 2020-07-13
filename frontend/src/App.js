@@ -1,83 +1,87 @@
-import React from 'react'
+import React, { Component } from 'react'
 import './App.css'
+import NoteItem from './components/NoteItem'
+import NoteForm from './components/NoteForm'
 
-function App() {
-  const prevData = [
-    {
-      id: 0,
-      content:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio consequatur commodi possimus, facilis ipsam quidem adipisci eaque vero, reprehenderit cum quibusdam distinctio dicta obcaecati provident. Assumenda voluptate voluptas quasi, ullam ad earum eligendi perspiciatis maiores?',
-    },
-  ]
-  return (
-    <div className="container">
-      <header>
-        <h1 className="header-with-btn">Notes</h1>
-        <button
-          className="refresh-btn"
-          onClick={() => console.log('Refreshed!')}>
-          <i className="material-icons" role="presentation">
-            refresh
-          </i>
-          <span className="sr-only">Refresh the list</span>
-        </button>
-      </header>
-      <ul className="notes-container">
-        <li className="note">
-          <p className="note-content">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos,
-            consequatur.
-          </p>
+export default class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      form: {},
+      notes: [
+        {
+          id: '007',
+          content:
+            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum quod deserunt nihil, praesentium animi magni!',
+        },
+      ],
+    }
+
+    // Bind event handlers
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleRemove = this.handleRemove.bind(this)
+    this.loadData = this.loadData.bind(this)
+  }
+
+  componentDidMount() {
+    this.loadData()
+    console.log('Data is:', this.state.notes)
+  }
+
+  handleRemove = (id) => {
+    // Remove the note from state
+    this.setState(() => this.state.notes.filter((o) => o.id !== this.id))
+  }
+
+  handleSubmit = (e) => {
+    // Prevent default submit event
+    e.preventDefault()
+    // Update state with a new note with new id
+    // and flush form
+    this.setState({
+      notes: this.state.form,
+      form: {},
+    })
+  }
+
+  // Load data helper function for API
+  loadData = () => {
+    fetch(process.env.REACT_APP_NOTES_URL)
+      .then((response) => response.json())
+      .then((notes) => {
+        console.log(this.state.notes)
+        // this.setState({ response })
+      })
+  }
+
+  render() {
+    const { form, notes } = this.state
+
+    return (
+      <div className="container">
+        <header>
+          <h1 className="header-with-btn">Notes</h1>
           <button
-            className="note-remove-btn"
-            onClick={() => console.log('Removed!')}>
+            className="refresh-btn"
+            onClick={() => console.log('Refreshed!')}>
             <i className="material-icons" role="presentation">
-              clear
+              refresh
             </i>
-            <span className="sr-only">Remove me</span>
+            <span className="sr-only">Refresh the list</span>
           </button>
-        </li>
-        <li className="note">
-          <p className="note-content">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, eum
-            porro? Suscipit nemo ex nostrum!
-          </p>
-          <button
-            className="note-remove-btn"
-            onClick={() => console.log('Removed!')}>
-            <i className="material-icons" role="presentation">
-              clear
-            </i>
-            <span className="sr-only">Remove me</span>
-          </button>
-        </li>
-      </ul>
-      <form className="form">
-        <div className="form-item form-item-container">
-          <h2>
-            <label htmlFor="input-crud">New Note</label>
-          </h2>
-          <textarea
-            className="form-input form-textarea"
-            id="input-crud"
-            cols="50"
-            rows="5"
-            placeholder="What would you like to add to your notes?"></textarea>
-          {/* </div>
-        <div className="form-item form-item-submit"> */}
-          <button
-            type="submit"
-            className="form-submit-btn"
-            onClick={() => console.log('Added!')}>
-            <i className="material-icons" role="presentation">
-              add
-            </i>
-            <span className="sr-only">Add note</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  )
+        </header>
+        <ul className="notes-container">
+          {notes.map((o) => (
+            <li className="note" key={o.id}>
+              <NoteItem noteId={o.id} onRemove={this.handleRemove}>
+                {o.content}
+              </NoteItem>
+            </li>
+          ))}
+        </ul>
+        <NoteForm form={form} onSubmit={this.handleSubmit} />
+      </div>
+    )
+  }
 }
-
-export default App
