@@ -1,38 +1,242 @@
-.App {
+@import url(https://fonts.googleapis.com/css?family=Lato:400, 700);
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* Global Styles */
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  font: 16px/24px 'Lato', Arial, sans-serif;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media screen and (prefers-reduced-motion: reduce), (update: slow) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important; /* Hat tip Nick/cssremedy (https://css-tricks.com/revisiting-prefers-reduced-motion-the-reduced-motion-media-query/#comment-1700170) */
+    transition-duration: 0.001ms !important;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.sr-only {
+  position: absolute;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Local Styles */
+
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  margin: 0;
+  padding: 5%;
+  width: 100vw;
+  height: 100vh;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* Form */
+
+.form {
+  display: flex;
+  width: 85%;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  margin: 1rem auto 1.5rem auto;
+  padding: 0;
+  padding-bottom: 0.5rem; /* For iPhone X */
+}
+
+.form-item {
+  flex: 0 1 auto;
+  margin: 0.75rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+/* Input */
+
+.form-input {
+  display: block;
+  width: 100%;
+  min-height: 3.5rem;
+  border: 2px solid black;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: black;
+  margin-top: 1rem;
+  padding: 0.75rem 0.5rem;
+  font-size: 1rem;
+  font-family: 'Lato', Arial, sans-serif;
+  font-weight: bolder;
+  text-align: center;
+  letter-spacing: 0.15rem;
+}
+
+.form-input:active,
+.form-input:focus,
+.form-input:hover {
+  border-bottom: thick solid black;
+  font-weight: bold;
+  outline: none;
+}
+
+.form-input-constraint {
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+/* .form-input-validity::after {
+  padding-left: 0.3125rem;
+}
+
+input.form-input:invalid + .form-input-validity::after {
+  content: '✖';
+}
+
+input.form-input:valid + .form-input-validity::after {
+  content: '✓';
+} */
+
+/* Icon Buttons */
+
+.refresh-btn {
+  min-width: 2rem;
+  height: 2rem;
+  margin: 0.25rem;
+  border: 2px solid black;
+  border-radius: 0.5rem;
+  background-color: white;
+  font-size: 0.5rem;
+  font-weight: bolder;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.refresh-btn:active,
+.refresh-btn:focus,
+.refresh-btn:hover {
+  border-color: white;
+  background-color: black;
   color: white;
+  font-weight: bold;
+  outline: none;
 }
 
-.App-link {
-  color: #61dafb;
+/* Form - textarea and submit btn */
+
+.form-textarea {
+  padding: 1rem;
+  font-style: italic;
+  text-align: left;
+  letter-spacing: 1.5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* .form-item-submit {
+  align-self: flex-end;
+} */
+.form-item-container {
+  /* Position aligned with .form-submit-btn */
+  position: relative;
+}
+
+.form-submit-btn {
+  /* Depends on the .form-item-container position */
+  position: absolute;
+  top: 2.75rem;
+  right: -1.5rem;
+  min-width: 2rem;
+  height: 2rem;
+  margin: 0.25rem;
+  border: 2px solid black;
+  border-radius: 0.5rem;
+  background-color: white;
+  font-size: 0.5rem;
+  font-weight: bolder;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.form-submit-btn:active,
+.form-submit-btn:focus,
+.form-submit-btn:hover {
+  border-color: white;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  outline: none;
+}
+
+/* H1 with a button  */
+.header-with-btn {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+/* Notes */
+
+.notes-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 0;
+  padding-top: 1rem;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.note {
+  /* Position aligned with .note-remove-btn */
+  position: relative;
+  list-style: none;
+  margin: 1rem 2rem;
+  padding: 0 1.5rem;
+  border: 2px solid black;
+  border-radius: 0.5rem;
+}
+
+.note-content {
+  padding: 0.5rem 0.25rem;
+}
+
+.note-remove-btn {
+  /* Depends on the .note position */
+  position: absolute;
+  top: -0.2rem;
+  right: 0;
+  min-width: 2rem;
+  height: 2rem;
+  margin: -0.75rem;
+  border: 2px solid black;
+  border-radius: 0.5rem;
+  background-color: white;
+  font-size: 0.5rem;
+  font-weight: bolder;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+.note-remove-btn:active,
+.note-remove-btn:focus,
+.note-remove-btn:hover {
+  border-color: white;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  outline: none;
 }
