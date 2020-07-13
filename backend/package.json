@@ -3,6 +3,12 @@
     "forever": "^3.0.0",
     "koa": "^2.13.0",
     "koa-router": "^9.1.0",
-    "koa2-cors": "^2.0.6"
-  }
+    "koa2-cors": "^2.0.6",
+    "minimist": "^0.2.1"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/m3ta007/overREACTing-crud-notes",
+  "license": "MIT"
 }
