@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 function NoteForm(props) {
   const { form } = props
 
-  const handleInput = (name, value) => {
+  const handleInput = (e) => {
+    const { name, value } = e.target
     props.onInput(name, value)
   }
 

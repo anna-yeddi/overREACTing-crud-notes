@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
+import { nanoid } from 'nanoid'
 import NoteItem from './components/NoteItem'
 import NoteForm from './components/NoteForm'
 
@@ -11,7 +12,7 @@ export default class App extends Component {
       form: {},
       notes: [
         {
-          id: '007',
+          id: '0070',
           content:
             'Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum quod deserunt nihil, praesentium animi magni!',
         },
@@ -19,6 +20,7 @@ export default class App extends Component {
     }
 
     // Bind event handlers
+    this.handleInput = this.handleInput.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleRemove = this.handleRemove.bind(this)
     this.loadData = this.loadData.bind(this)
@@ -29,30 +31,44 @@ export default class App extends Component {
     console.log('Data is:', this.state.notes)
   }
 
-  handleRemove = (id) => {
-    // Remove the note from state
-    this.setState(() => this.state.notes.filter((o) => o.id !== this.id))
+  handleInput = (name, value) => {
+    // Update form state with new data
+    this.setState({
+      form: {
+        [name]: value,
+      },
+    })
   }
 
-  handleSubmit = (e) => {
-    // Prevent default submit event
-    e.preventDefault()
+  handleSubmit = (form) => {
     // Update state with a new note with new id
     // and flush form
     this.setState({
-      notes: this.state.form,
+      notes: [
+        ...this.state.notes,
+        {
+          id: nanoid(4),
+          content: form.newNote,
+        },
+      ],
       form: {},
     })
+  }
+
+  handleRemove = (id) => {
+    // Remove the note from state
+    this.setState(() => this.state.notes.filter((o) => o.id !== id))
   }
 
   // Load data helper function for API
   loadData = () => {
     fetch(process.env.REACT_APP_NOTES_URL)
-      .then((response) => response.json())
-      .then((notes) => {
-        console.log(this.state.notes)
+      .then((response) => response.text())
+      // .then((response) => response.json())
+      .then(
+        (text) => console.log(text)
         // this.setState({ response })
-      })
+      )
   }
 
   render() {
@@ -80,7 +96,11 @@ export default class App extends Component {
             </li>
           ))}
         </ul>
-        <NoteForm form={form} onSubmit={this.handleSubmit} />
+        <NoteForm
+          form={form}
+          onSubmit={this.handleSubmit}
+          onInput={this.handleInput}
+        />
       </div>
     )
   }
