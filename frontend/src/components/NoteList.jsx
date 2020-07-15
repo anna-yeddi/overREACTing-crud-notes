@@ -17,9 +17,17 @@ function NoteList(props) {
   }
 
   if (error) {
-    return <h2 style={{ color: 'red' }}>Error: {error.message}</h2>
+    return (
+      <div role="status">
+        <h2 style={{ color: 'red' }}>Error: {error.message}</h2>
+      </div>
+    )
   } else if (!isLoaded) {
-    return <h2>Loading...</h2>
+    return (
+      <div role="status">
+        <h2>Loading...</h2>
+      </div>
+    )
   } else {
     return (
       <>
