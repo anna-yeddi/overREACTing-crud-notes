@@ -16,7 +16,7 @@ export default class App extends Component {
     }
 
     // Bind event handlers
-    this.handleInput = this.handleInput.bind(this)
+    this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleRemove = this.handleRemove.bind(this)
     this.loadData = this.loadData.bind(this)
@@ -28,11 +28,7 @@ export default class App extends Component {
     this.loadData()
   }
 
-  componentDidUpdate() {
-    // this.loadData()
-  }
-
-  handleInput = (name, value) => {
+  handleChange = (name, value) => {
     // Update form state with new data
     this.setState({
       form: {
@@ -42,32 +38,11 @@ export default class App extends Component {
   }
 
   handleSubmit = () => {
-    // Update state with a new note with new id
-    // and flush form
     this.postData()
-    this.setState({
-      form: {
-        newNote: '',
-      },
-    })
-    // this.setState({
-    //   notes: [
-    //     ...this.state.notes,
-    //     {
-    //       id: nanoid(4),
-    //       content: form.newNote,
-    //     },
-    //   ],
-    //   form: {},
-    // })
   }
 
   handleRemove = (id) => {
-    console.log('To del', id)
     this.deleteData(id)
-    // this.loadData()
-    // Remove the note from state
-    // this.setState(() => this.state.notes.filter((o) => o.id !== id))
   }
 
   // GET data from API
@@ -77,6 +52,7 @@ export default class App extends Component {
       .then(
         (result) => {
           this.setState({
+            form: {},
             notes: result,
             isLoaded: true,
           })
@@ -90,7 +66,6 @@ export default class App extends Component {
           })
         }
       )
-      .then(console.log(this.state))
   }
 
   // POST data from API
@@ -98,20 +73,19 @@ export default class App extends Component {
     const requestOptions = {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ content: this.state.form.newNote }),
     }
     fetch(process.env.REACT_APP_NOTES_URL, requestOptions)
-      .then((response) => response.text())
-      .then((text) => console.log(text))
-    // .then((response) => response.json())
-    // .then(this.loadData())
-    // .then((result) =>
-    //   this.setState({ notes: result, form: {}, isLoaded: true })
-    // )
-    // .then((result) => console.log(this.state, result))
+      .then(
+        this.setState({
+          form: {
+            newNote: '',
+          },
+        })
+      )
+      .then(() => this.loadData())
   }
 
   // DELETE data from API
@@ -119,14 +93,9 @@ export default class App extends Component {
     const requestOptions = {
       method: 'DELETE',
     }
-    fetch(`${process.env.REACT_APP_NOTES_URL}/${id}`, requestOptions)
-      // .then((response) => response.text())
-      // .then((text) => console.log(text))
-      // .then((response) => response.json())
-      // .then((result) =>
-      //   this.setState({ notes: result, form: {}, isLoaded: true })
-      // )
-      .then((result) => console.log('Deleted', this.state, result))
+    fetch(`${process.env.REACT_APP_NOTES_URL}/${id}`, requestOptions).then(() =>
+      this.loadData()
+    )
   }
 
   render() {
@@ -141,28 +110,33 @@ export default class App extends Component {
         <div className="container">
           <header>
             <h1 className="header-with-btn">Notes</h1>
-            <button
-              className="refresh-btn"
-              onClick={() => console.log('Refreshed!')}>
+            <button className="refresh-btn" onClick={this.loadData}>
               <i className="material-icons" role="presentation">
                 refresh
               </i>
               <span className="sr-only">Refresh the list</span>
             </button>
           </header>
-          <ul className="notes-container">
-            {notes.map((o) => (
-              <li className="note" key={o.id}>
-                <NoteItem id={o.id} onRemove={this.handleRemove}>
-                  {o.content}
-                </NoteItem>
-              </li>
-            ))}
-          </ul>
+          {notes.length > 0 ? (
+            <ul className="notes-container">
+              {notes.map((o) => (
+                <li className="note" key={o.id}>
+                  <NoteItem id={o.id} onRemove={this.handleRemove}>
+                    {o.content}
+                  </NoteItem>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div>
+              <h2>No notes are added yet...</h2>
+              <p>Try to add one!</p>
+            </div>
+          )}
           <NoteForm
             form={form}
             onSubmit={this.handleSubmit}
-            onInput={this.handleInput}
+            onChange={this.handleChange}
           />
         </div>
       )

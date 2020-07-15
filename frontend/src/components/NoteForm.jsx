@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 function NoteForm(props) {
   const { form } = props
 
-  const handleInput = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target
-    props.onInput(name, value)
+    props.onChange(name, value)
   }
 
   // Lift form state up to update clocks
@@ -29,7 +29,8 @@ function NoteForm(props) {
           cols="50"
           rows="5"
           placeholder="What would you like to add to your notes?"
-          onChange={handleInput}></textarea>
+          value={form.newNote}
+          onChange={handleChange}></textarea>
         <button type="submit" className="form-submit-btn">
           <i className="material-icons" role="presentation">
             add
