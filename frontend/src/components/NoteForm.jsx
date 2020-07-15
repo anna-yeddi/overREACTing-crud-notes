@@ -1,8 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import BtnImg from './BtnImg'
 
+/**
+ * Renders a <NoteForm /> component
+ * that is a form to take user input and
+ * submit new note content
+ *
+ * @global
+ * @component
+ */
 function NoteForm(props) {
-  const { form } = props
+  const { note } = props
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -13,7 +22,7 @@ function NoteForm(props) {
   const handleSubmit = (e) => {
     // Prevent default submit event
     e.preventDefault()
-    props.onSubmit(form)
+    props.onSubmit(note)
   }
 
   return (
@@ -29,34 +38,28 @@ function NoteForm(props) {
           cols="50"
           rows="5"
           placeholder="What would you like to add to your notes?"
-          value={form.newNote}
+          value={note}
           onChange={handleChange}></textarea>
-        <button type="submit" className="form-submit-btn">
-          <i className="material-icons" role="presentation">
-            add
-          </i>
-          <span className="sr-only">Add note</span>
-        </button>
+        <BtnImg type="submit" icon="add" classes="form-submit-btn">
+          Add note
+        </BtnImg>
       </div>
     </form>
   )
 }
 
 NoteForm.propTypes = {
-  // /** @param {Object} form State of form fields */
-  // form: PropTypes.shape({
-  //   /** @param {string} city Name of the city for the clock */
-  //   city: PropTypes.string.isRequired,
-  //   /** @param {number} gmt Offset / Time zone for the clock */
-  //   gmt: PropTypes.number.isRequired,
-  // }).isRequired,
-  // /** @param {*} [name] Name of the input control */
-  // name: PropTypes.any,
-  // /** @param {func} onInput Function to lift the state up from props */
-  // onInput: PropTypes.func.isRequired,
-  // /** @param {func} onSubmit Function to lift the state up from props
-  //  * and update clocks  */
-  // onSubmit: PropTypes.func.isRequired,
+  /** @param {Object {string|func}} [props] Set of data for the form */
+  props: PropTypes.shape({
+    /** @param {string} [note] Content of the note (if passed) */
+    note: PropTypes.string,
+    /** @param {func} handleChange Function to lift the state up from props
+     * on user input */
+    handleChange: PropTypes.func.isRequired,
+    /** @param {func} handleSubmit Function to lift the state up from props
+     * and update list of notes  */
+    handleSubmit: PropTypes.func.isRequired,
+  }),
 }
 
 export default NoteForm

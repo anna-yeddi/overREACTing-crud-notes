@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
 import './App.css'
-import NoteItem from './components/NoteItem'
+import NoteList from './components/NoteList'
 import NoteForm from './components/NoteForm'
+import BtnImg from './components/BtnImg'
 
+/**
+ * Renders a note taking application
+ * that fetches data from a custom Koa backend
+ *
+ * @global
+ * @app
+ */
 export default class App extends Component {
   constructor(props) {
     super(props)
@@ -19,6 +27,7 @@ export default class App extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleRemove = this.handleRemove.bind(this)
+    this.refreshData = this.refreshData.bind(this)
     this.loadData = this.loadData.bind(this)
     this.postData = this.postData.bind(this)
     this.deleteData = this.deleteData.bind(this)
@@ -28,6 +37,7 @@ export default class App extends Component {
     this.loadData()
   }
 
+  // Type a note
   handleChange = (name, value) => {
     // Update form state with new data
     this.setState({
@@ -37,12 +47,22 @@ export default class App extends Component {
     })
   }
 
+  // Add a note
   handleSubmit = () => {
     this.postData()
   }
 
+  // Remove a note
   handleRemove = (id) => {
     this.deleteData(id)
+  }
+
+  //
+  refreshData = () => {
+    this.setState({
+      isLoaded: false,
+    })
+    this.loadData()
   }
 
   // GET data from API
@@ -101,45 +121,29 @@ export default class App extends Component {
   render() {
     const { form, notes, error, isLoaded } = this.state
 
-    if (error) {
-      return <h2 style={{ color: 'red' }}>Error: {error.message}</h2>
-    } else if (!isLoaded) {
-      return <h2>Loading...</h2>
-    } else {
-      return (
-        <div className="container">
-          <header>
-            <h1 className="header-with-btn">Notes</h1>
-            <button className="refresh-btn" onClick={this.loadData}>
-              <i className="material-icons" role="presentation">
-                refresh
-              </i>
-              <span className="sr-only">Refresh the list</span>
-            </button>
-          </header>
-          {notes.length > 0 ? (
-            <ul className="notes-container">
-              {notes.map((o) => (
-                <li className="note" key={o.id}>
-                  <NoteItem id={o.id} onRemove={this.handleRemove}>
-                    {o.content}
-                  </NoteItem>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div>
-              <h2>No notes are added yet...</h2>
-              <p>Try to add one!</p>
-            </div>
-          )}
-          <NoteForm
-            form={form}
-            onSubmit={this.handleSubmit}
-            onChange={this.handleChange}
-          />
-        </div>
-      )
-    }
+    return (
+      <div className="container">
+        <header>
+          <h1 className="header-with-btn">Notes</h1>
+          <BtnImg
+            icon="refresh"
+            classes="refresh-btn"
+            onClick={this.refreshData}>
+            Refresh the list
+          </BtnImg>
+        </header>
+        <NoteList
+          notes={notes}
+          onRemove={this.handleRemove}
+          error={error}
+          isLoaded={isLoaded}
+        />
+        <NoteForm
+          note={form.newNote}
+          onSubmit={this.handleSubmit}
+          onChange={this.handleChange}
+        />
+      </div>
+    )
   }
 }
