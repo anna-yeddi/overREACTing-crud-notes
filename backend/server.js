@@ -9,8 +9,19 @@ const app = new Koa()
 app.use(cors())
 app.use(koaBody({ json: true }))
 
-const notes = []
-let nextId = 1
+const notes = [
+  {
+    content:
+      "We need to sync the comms with the wider stakeholder community. Do we need to crystallize a plan for what's our go to market strategy?",
+    id: 7070,
+  },
+  {
+    content:
+      "Do I have consent to record this meeting? We need to leverage our synergies. Who's the goto on this job with the way forward?",
+    id: 7007,
+  },
+]
+let nextId = 101
 
 const router = new Router()
 
