@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './App.css'
-import { nanoid } from 'nanoid'
 import NoteItem from './components/NoteItem'
 import NoteForm from './components/NoteForm'
 
@@ -10,13 +9,10 @@ export default class App extends Component {
 
     this.state = {
       form: {},
-      notes: [
-        {
-          id: '0070',
-          content:
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum quod deserunt nihil, praesentium animi magni!',
-        },
-      ],
+      notes: [],
+      // API helpers
+      error: null,
+      isLoaded: false,
     }
 
     // Bind event handlers
@@ -24,11 +20,16 @@ export default class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleRemove = this.handleRemove.bind(this)
     this.loadData = this.loadData.bind(this)
+    this.postData = this.postData.bind(this)
+    this.deleteData = this.deleteData.bind(this)
   }
 
   componentDidMount() {
     this.loadData()
-    console.log('Data is:', this.state.notes)
+  }
+
+  componentDidUpdate() {
+    // this.loadData()
   }
 
   handleInput = (name, value) => {
@@ -40,68 +41,131 @@ export default class App extends Component {
     })
   }
 
-  handleSubmit = (form) => {
+  handleSubmit = () => {
     // Update state with a new note with new id
     // and flush form
+    this.postData()
     this.setState({
-      notes: [
-        ...this.state.notes,
-        {
-          id: nanoid(4),
-          content: form.newNote,
-        },
-      ],
-      form: {},
+      form: {
+        newNote: '',
+      },
     })
+    // this.setState({
+    //   notes: [
+    //     ...this.state.notes,
+    //     {
+    //       id: nanoid(4),
+    //       content: form.newNote,
+    //     },
+    //   ],
+    //   form: {},
+    // })
   }
 
   handleRemove = (id) => {
+    console.log('To del', id)
+    this.deleteData(id)
+    // this.loadData()
     // Remove the note from state
-    this.setState(() => this.state.notes.filter((o) => o.id !== id))
+    // this.setState(() => this.state.notes.filter((o) => o.id !== id))
   }
 
-  // Load data helper function for API
+  // GET data from API
   loadData = () => {
     fetch(process.env.REACT_APP_NOTES_URL)
-      .then((response) => response.text())
-      // .then((response) => response.json())
+      .then((response) => response.json())
       .then(
-        (text) => console.log(text)
-        // this.setState({ response })
+        (result) => {
+          this.setState({
+            notes: result,
+            isLoaded: true,
+          })
+        },
+        // Catch error to avoid it being printed out in the app
+        // and not to allow exceptions from actual bugs
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error,
+          })
+        }
       )
+      .then(console.log(this.state))
+  }
+
+  // POST data from API
+  postData = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content: this.state.form.newNote }),
+    }
+    fetch(process.env.REACT_APP_NOTES_URL, requestOptions)
+      .then((response) => response.text())
+      .then((text) => console.log(text))
+    // .then((response) => response.json())
+    // .then(this.loadData())
+    // .then((result) =>
+    //   this.setState({ notes: result, form: {}, isLoaded: true })
+    // )
+    // .then((result) => console.log(this.state, result))
+  }
+
+  // DELETE data from API
+  deleteData = (id) => {
+    const requestOptions = {
+      method: 'DELETE',
+    }
+    fetch(`${process.env.REACT_APP_NOTES_URL}/${id}`, requestOptions)
+      // .then((response) => response.text())
+      // .then((text) => console.log(text))
+      // .then((response) => response.json())
+      // .then((result) =>
+      //   this.setState({ notes: result, form: {}, isLoaded: true })
+      // )
+      .then((result) => console.log('Deleted', this.state, result))
   }
 
   render() {
-    const { form, notes } = this.state
+    const { form, notes, error, isLoaded } = this.state
 
-    return (
-      <div className="container">
-        <header>
-          <h1 className="header-with-btn">Notes</h1>
-          <button
-            className="refresh-btn"
-            onClick={() => console.log('Refreshed!')}>
-            <i className="material-icons" role="presentation">
-              refresh
-            </i>
-            <span className="sr-only">Refresh the list</span>
-          </button>
-        </header>
-        <ul className="notes-container">
-          {notes.map((o) => (
-            <li className="note" key={o.id}>
-              <NoteItem noteId={o.id} onRemove={this.handleRemove}>
-                {o.content}
-              </NoteItem>
-            </li>
-          ))}
-        </ul>
-        <NoteForm
-          form={form}
-          onSubmit={this.handleSubmit}
-          onInput={this.handleInput}
-        />
-      </div>
-    )
+    if (error) {
+      return <h2 style={{ color: 'red' }}>Error: {error.message}</h2>
+    } else if (!isLoaded) {
+      return <h2>Loading...</h2>
+    } else {
+      return (
+        <div className="container">
+          <header>
+            <h1 className="header-with-btn">Notes</h1>
+            <button
+              className="refresh-btn"
+              onClick={() => console.log('Refreshed!')}>
+              <i className="material-icons" role="presentation">
+                refresh
+              </i>
+              <span className="sr-only">Refresh the list</span>
+            </button>
+          </header>
+          <ul className="notes-container">
+            {notes.map((o) => (
+              <li className="note" key={o.id}>
+                <NoteItem id={o.id} onRemove={this.handleRemove}>
+                  {o.content}
+                </NoteItem>
+              </li>
+            ))}
+          </ul>
+          <NoteForm
+            form={form}
+            onSubmit={this.handleSubmit}
+            onInput={this.handleInput}
+          />
+        </div>
+      )
+    }
   }
 }

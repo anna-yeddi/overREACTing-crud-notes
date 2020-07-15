@@ -2,20 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 function NoteItem(props) {
-  const { noteId } = props.noteId
+  const { id } = props
 
-  const handleRemove = () => {
-    props.onRemove(noteId)
+  const handleRemove = (e) => {
+    props.onRemove(id)
   }
 
   return (
     <>
       <p className="note-content">{props.children}</p>
-      <button className="note-remove-btn" onClick={() => handleRemove}>
+      <button className="note-remove-btn" onClick={handleRemove}>
         <i className="material-icons" role="presentation">
           clear
         </i>
-        <span className="sr-only">Remove note {noteId}</span>
+        <span className="sr-only">Remove note {id}</span>
       </button>
     </>
   )

@@ -29,11 +29,8 @@ function NoteForm(props) {
           cols="50"
           rows="5"
           placeholder="What would you like to add to your notes?"
-          onInput={handleInput}></textarea>
-        <button
-          type="submit"
-          className="form-submit-btn"
-          onClick={() => console.log('Added!')}>
+          onChange={handleInput}></textarea>
+        <button type="submit" className="form-submit-btn">
           <i className="material-icons" role="presentation">
             add
           </i>
