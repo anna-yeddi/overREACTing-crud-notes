@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import BtnImg from './BtnImg'
+import ButtonImage from './ButtonImage'
 
 /**
  * Renders a <NoteItem /> component
@@ -21,9 +21,12 @@ function NoteItem(props) {
   return (
     <>
       <p className="note-content">{props.children}</p>
-      <BtnImg classes="note-remove-btn" onClick={handleRemove} icon="clear">
+      <ButtonImage
+        classes="note-remove-btn"
+        onClick={handleRemove}
+        icon="clear">
         Remove note {id}
-      </BtnImg>
+      </ButtonImage>
     </>
   )
 }

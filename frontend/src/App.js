@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import NoteList from './components/NoteList'
 import NoteForm from './components/NoteForm'
-import BtnImg from './components/BtnImg'
+import ButtonImage from './components/ButtonImage'
 
 /**
  * Renders a note taking application
@@ -125,12 +125,12 @@ export default class App extends Component {
       <div className="container">
         <header>
           <h1 className="header-with-btn">Notes</h1>
-          <BtnImg
+          <ButtonImage
             icon="refresh"
             classes="refresh-btn"
             onClick={this.refreshData}>
             Refresh the list
-          </BtnImg>
+          </ButtonImage>
         </header>
         <NoteList
           notes={notes}

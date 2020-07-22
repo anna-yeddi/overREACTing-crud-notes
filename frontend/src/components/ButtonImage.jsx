@@ -2,14 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 /**
- * Renders a <BtnImg /> component
+ * Renders a <ButtonImage /> component
  * that creates a functional image button
  *
  * @global
  * @component
  * @see https://www.w3.org/WAI/tutorials/images/functional/
  */
-function BtnImg(props) {
+function ButtonImage(props) {
   return (
     <button type={props.type} onClick={props.onClick} className={props.classes}>
       <i className="material-icons" role="presentation">
@@ -20,7 +20,7 @@ function BtnImg(props) {
   )
 }
 
-BtnImg.propTypes = {
+ButtonImage.propTypes = {
   /** @param {Object {string|func|node}} [props] Set of data for the button */
   props: PropTypes.shape({
     /** @param {node} children Label text to render off-screen for image button */
@@ -36,4 +36,4 @@ BtnImg.propTypes = {
   }),
 }
 
-export default BtnImg
+export default ButtonImage

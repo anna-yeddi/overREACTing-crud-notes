@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import BtnImg from './BtnImg'
+import ButtonImage from './ButtonImage'
 
 /**
  * Renders a <NoteForm /> component
@@ -40,9 +40,9 @@ function NoteForm(props) {
           placeholder="What would you like to add to your notes?"
           value={note}
           onChange={handleChange}></textarea>
-        <BtnImg type="submit" icon="add" classes="form-submit-btn">
+        <ButtonImage type="submit" icon="add" classes="form-submit-btn">
           Add note
-        </BtnImg>
+        </ButtonImage>
       </div>
     </form>
   )
